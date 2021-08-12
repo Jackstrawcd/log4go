@@ -88,7 +88,7 @@ func NewFileLogWriter(fname string, rotate bool, daily bool) *FileLogWriter {
 				w.file.Close()
 			}
 		}()
-
+                var bufferSize int = 0
 		for {
 			select {
 			case <-w.rot:
@@ -125,6 +125,13 @@ func NewFileLogWriter(fname string, rotate bool, daily bool) *FileLogWriter {
 				// Update the counts
 				w.maxlines_curlines++
 				w.maxsize_cursize += n
+			}
+			
+			diff, _ := strconv.ParseFloat(fmt.Sprintf("%d", w.maxsize_cursize - bufferSize), 32)
+			chaged := math.Abs(diff)
+			if chaged > 10 {
+				w.file.Sync()
+				bufferSize = w.maxsize_cursize
 			}
 		}
 	}()
