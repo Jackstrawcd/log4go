@@ -7,6 +7,8 @@ import (
 	"os"
 	"time"
 	"strings"
+	"math"
+	"strconv"
 )
 
 // This log writer sends output to a file
@@ -88,6 +90,7 @@ func NewFileLogWriter(fname string, rotate bool, daily bool) *FileLogWriter {
 				w.file.Close()
 			}
 		}()
+		
                 var bufferSize int = 0
 		for {
 			select {
